@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>BLOOD DONATION CENTER</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">  
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <link rel="stylesheet" href="/static/css/common.css">
+
+    <script src='/static/js/main.js'></script>
+    <script src='/static/js/common.js'></script>
+    <script src="/static/js/donarList.js"></script>
+</head>
+<body class="menubody" onload="enablePoints();">
+    <div id="overlay-loader" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+    <div id="main-content">
+    <form action="" method="POST">
+        <input type="hidden" name="userNameList"  />
+        <input type="hidden" name="bloodGroupList"  />
+        <input type="hidden" name="cityList" />
+        <input type="hidden" name="emailList" />
+        <table class="layoutMiniTable">
+            <tr>
+                <center>
+                    <td width="100%"><label for="title" id="title" class="lbltext"><h2>Coins Details</h2></label></td>
+                </center>
+            </tr>
+        </table>
+        <fieldset>
+            <table class="layoutMiniTable">
+                <tr>
+                    <td ><label for="donorId" class="lbltext">Donor Id:</label></td>
+                    <td ><input type="text" id="donorId" class="fieldinput_mandatory" name="donorId" placeholder="Enter Donor Id" required></td>
+                </tr>
+                <tr>
+                    <td ><label for="donarName" class="lbltext">Donor Name:</label></td>
+                    <td><input type="text" id="donarName" class="fieldinput_mandatory" name="donarName" placeholder="Enter Donor name" required></td>
+                </tr>
+                <tr>
+                    <td  id="point_label"><label for="points" class="lbltext">Available Points:</label></td>
+                    <td ><input type="text" id="points" class="fieldinput_readOnly" name="points"  ></td>
+                </tr>
+            </table>
+        </fieldset>
+        <table class="layoutMiniTable">
+            <tr>
+                <td>
+                    <button type="button" id="fetchDonartCoins"  onclick="javascript:return enablePoints() && fetchCoins();" >Fetch Donors</button>
+                </td>
+            </tr>
+        </table>
+        
+        
+    
+    </form>
+</div>
+</body>
+</html>

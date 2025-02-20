@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!-- Source Codes By CodingNepal - www.codingnepalweb.com -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Form in HTML and CSS | CodingNepal</title>
+
+</head>
+<body>
+  <div class="login_form">
+    <!-- Login form container -->
+    <form action="Register" method="POST">
+
+        <h2><center>REGISTER</center></h2><br>
+   
+      <!--Username input box-->
+      <div class="input_box">
+        <label for="Username">Username</label>
+        <input type="text" name="username" placeholder="Enter username" required />
+      </div>
+      <!-- Email input box -->
+      <div class="input_box">
+        <label for="email">Email</label>
+        <input type="email" name="email" placeholder="Enter email address" required />
+      </div>
+      <!-- phone number input box -->
+      <div class="input_box">
+        <label for="number">Phone Number</label>
+        <input type="phone number" name="phone_number" placeholder="Enter phone number" required />
+      </div>
+      <!--City input box-->
+      <div class="input_box">
+        <label for="city">City</label>
+        <input type="text" name="city" placeholder="Enter your city" required />
+      </div>
+      <!--blood group input box-->
+      <div class="input_box">
+        <label for="blood group">Blood Group</label>
+        <input type="text" name="blood_group" placeholder="Enter your blood group" required />
+      </div>
+        <!--password input box-->
+        <div class="input_box">
+            <label for="password">Password</label>
+            <input type="password" name="password" placeholder="create password" required />
+          </div>
+            <!--re_password input box-->
+      <div class="input_box">
+        <label for="Re-Enter password">Re-Enter password</label>
+        <input type="password" name="re_password" placeholder="re-enter your password" required />
+      </div>
+
+      
+
+       <!-- Login button -->
+      <button type="submit">Register Now</button>
+
+      <p class="sign_up">Do have an account? <a href="{{ url_for('Login') }}">Sign In</a></p>
+    </form>
+  </div>
+</body>
+</html>
