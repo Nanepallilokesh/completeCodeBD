@@ -1,3 +1,7 @@
+window.onload = function () {
+    window.scrollTo(0, 0);
+};
+
 function sendAllEmails() {
     const successful = [];
     const failed = [];
@@ -48,7 +52,7 @@ function sendAllEmails() {
                 failed.push(email[i]); // Add failed email to the list
             }
 
-            document.getElementById('overlay-loader').style.display = 'none';
+            //document.getElementById('overlay-loader').style.display = 'none';
         })
         .catch((error) => {
             console.error("Error sending email to " + userName[i], error);
@@ -87,7 +91,7 @@ function sendEmailsToRemaining() {
     var donarCity = '';
     var donarEmail = '';
     const seekerName = document.forms[0].seekerName.value;
-    document.getElementById('overlay-loader').style.display = 'block';
+    document.getElementById('overlay-loader').style.display = 'flex';
 
     // Get the table element
     const table = document.getElementById("donorDataTable1");
@@ -143,7 +147,6 @@ function sendEmailsToRemaining() {
                 failed.push(email[i]); // Add failed email to the list
             }
 
-            document.getElementById('overlay-loader').style.display = 'none';
         })
         .catch((error) => {
             console.error("Error sending email to " + userName[i], error);
@@ -175,20 +178,6 @@ function sendEmailsToRemaining() {
 
 
 
-// function donarList_onload(){
-//     alert('hello donars');
-//     let cleaned = document.forms[0].userNameList.value.replace(/[\[\]',]/g, '');
-//     document.forms[0].userNameList.value = cleaned.replace(/\s+/g, '~');
-
-//     let cleaned1 = document.forms[0].bloodGroupList.value.replace(/[\[\]',]/g, '');
-//     document.forms[0].bloodGroupList.value = cleaned1.replace(/\s+/g, '~');
-
-//     let cleaned2 = document.forms[0].cityList.value.replace(/[\[\]',]/g, '');
-//     document.forms[0].cityList.value = cleaned2.replace(/\s+/g, '~');
-
-//     let cleaned3 = document.forms[0].emailList.value.replace(/[\[\]',]/g, '');
-//     document.forms[0].emailList.value = cleaned3.replace(/\s+/g, '~');
-// }
 
 function fetchDonors(){
     var seekername = document.getElementById('seekerName').value;
@@ -196,10 +185,7 @@ function fetchDonors(){
     var city = document.getElementById('city').value;
 
     document.getElementById('overlay-loader').style.display = 'flex'; // overlay loading screen
-            // const params = {
-            //     param1: p1,
-            //     param2: p2
-            // };
+            
 
             // Call the Flask API with parameters
             fetch('/Donar', {
@@ -253,16 +239,7 @@ function fetchDonors(){
                         tempEmail = tempEmail+'~'+email[i];
                     }
 
-                    // //local storage for further use-->start
-                    // data = {
-                    //     userName : tempUserName,
-                    //     bloodGroup : tempBloodGroup,
-                    //     city : tempCity,
-                    //     email : tempEmail
-                    // }
-                    // localStorage.setItem(seekername, JSON.stringify(data));
-
-                    // //local storage for further use-->END
+                    
 
                     document.getElementsByName('userNameList')[0].value=tempUserName;
                     document.getElementsByName('bloodGroupList')[0].value=tempBloodGroup;
@@ -318,10 +295,7 @@ function fetchRequestedDonors(){
     var requestType = document.forms[0].seekerRequest.value;
 
     document.getElementById('overlay-loader').style.display = 'flex'; // overlay loading screen
-            // const params = {
-            //     param1: p1,
-            //     param2: p2
-            // };
+            
 
             // Call the Flask API with parameters
             fetch('/requestedDonar', {
@@ -367,16 +341,7 @@ function fetchRequestedDonors(){
                         tempEmail = tempEmail+'~'+email[i];
                     }
 
-                    // //local storage for further use-->start
-                    // data = {
-                    //     userName : tempUserName,
-                    //     bloodGroup : tempBloodGroup,
-                    //     city : tempCity,
-                    //     email : tempEmail
-                    // }
-                    // localStorage.setItem(seekername, JSON.stringify(data));
-
-                    // //local storage for further use-->END
+                    
 
                     document.getElementsByName('userNameList')[0].value=tempUserName;
                     document.getElementsByName('bloodGroupList')[0].value=tempBloodGroup;
@@ -402,7 +367,7 @@ function fetchRequestedDonors(){
                         const checkbox = document.createElement('input');
                         checkbox.type = 'checkbox'; // Set input type to checkbox
                         checkbox.setAttribute('name', `checkbox${i}`); 
-                        // checkbox.value = username[i] || ''; // Optional: Set value to identify the row
+                       
                         // Add an event listener to allow only one checkbox to be selected
                         checkbox.addEventListener('change', (event) => {
                             if (event.target.checked) {
@@ -418,7 +383,7 @@ function fetchRequestedDonors(){
                                     }
                                 });
                                 const emailsToSend = allEmails.filter((email) => email !== emailValue);
-                                //sendEmailsToRemaining(emailsToSend);
+                                
                             }
                         });
 
@@ -494,16 +459,13 @@ function storeRequestedDetails(userName,bloodGroup,city,email,seekerName){
     })
     .then((response) => {
         if (response.ok) {
-            alert('successfull Stored Data');
+            console.log("succesfully stored records")
         } else {
             alert('Failed to Store Data');
         }
     })
     .catch((error) => {
         console.error("Error sending email to " + error);
-        // failed.push(email[i]); // If there’s an error, add to the failed list
-
-       // document.getElementById('overlay-loader').style.display = 'none';
     })
     .finally(() => {
         //document.getElementById('overlay-loader').style.display = 'none';
@@ -520,7 +482,7 @@ function updateRequestedDetails(seekerName,uname,bloodGroup,city,email){
     })
     .then((response) => {
         if (response.ok) {
-            alert('Records Updated successfully');
+            console.log('Records Updated successfully');
         } else {
             alert('Failed to update records in 525 line'); // Add failed email to the list
         }

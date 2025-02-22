@@ -1,4 +1,4 @@
--<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -58,20 +58,21 @@
                         <a href="{{ url_for('Loginpage') }}" class="nav-item nav-link">Login</a> -->
                         
                         {% if session.get('logged_in') != True %}
-                        <script>console.log("session if");</script>
+                        
                         <a onclick="openHome('Home');" class="nav-item nav-link">Home</a>
                         <a onclick="openHome('About');" class="nav-item nav-link">About</a>
                         <a onclick="openHome('Service');" class="nav-item nav-link">Service</a>
                         <a onclick="openHome('Contact');" class="nav-item nav-link">Contact</a>
                         <a onclick="openHome('Loginpage');" class="nav-item nav-link">Login</a>
                         {% else %}
-                        <script>console.log("session ifelse");</script>
+                        
                         <a onclick="openHome('Home');" class="nav-item nav-link">Home</a>
                         <a onclick="openHome('Diet');" class="nav-item nav-link">Diet</a>
                         <a onclick="openHome('About');" class="nav-item nav-link">About</a>
                         <a onclick="openHome('Service');" class="nav-item nav-link">Service</a>
                         <a onclick="openHome('Contact');" class="nav-item nav-link">Contact</a>
                         <a href="{{ url_for('index') }}" class="nav-item nav-link">Logout</a>
+                        <a onclick="openHome('DonorId');" class="nav-item nav-link">DonorId</a>
                         {% endif %}
                     </div>
                 </div>
@@ -80,7 +81,7 @@
     </div>
     <!-- Navbar End -->
     
-    <iframe id="homepageframe" src="" frameborder="0" width="100%" height="700px"></iframe>
+    <iframe id="homepageframe" src="" frameborder="0" width="100%" height="700px" ></iframe>
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light mt-5 py-5" id="mainFooterDiv">

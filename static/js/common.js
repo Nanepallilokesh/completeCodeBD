@@ -1,6 +1,19 @@
+window.onload = function () {
+    window.scrollTo(0, 0);
+};
 function openHome(path) {
+    var iframes = document.querySelectorAll("iframe");
+    if (iframes.length > 1) {
+        for (var i = 1; i < iframes.length; i++) {
+            iframes[i].remove(); // Remove extra iframes
+        }
+    }
+    iframes.onload = function () {
+        iframes.contentWindow.scrollTo(0, 0);
+    };
     document.getElementById('homepageframe').src = '/' + path;
 }
+
 
 function validateLogin() {
     if (document.forms[0].userType.value == '') {
@@ -10,13 +23,29 @@ function validateLogin() {
         parent.document.getElementById('MainHeaderDiv').style.display = "none";
         parent.document.getElementById('mainFooterDiv').style.display = "none";
     }
+    iframe.onload = function () {
+        iframe.contentWindow.scrollTo(0, 0);
+    };
 
 }
 
 function openHospitalHome(path) {
+    var iframes = document.querySelectorAll("iframe");
+    if (iframes.length > 1) {
+        for (var i = 1; i < iframes.length; i++) {
+            iframes[i].remove(); // Remove any extra iframes
+        }
+    }
     document.getElementById('hospitalHomePage').src = '/' + path;
 }
-
+function removeExtraIframes() {
+    var iframes = document.querySelectorAll("iframe");
+    if (iframes.length > 1) {
+        for (var i = 1; i < iframes.length; i++) {
+            iframes[i].remove();
+        }
+    }
+}
 function checkForError() {
     if (document.getElementsByName('errorMsg')[0].value == "failed") {
         alert('Login Failed');
@@ -105,10 +134,7 @@ function fetchUserHistoryData(){
     var userName = document.getElementById('userName').value;
 
     document.getElementById('overlay-loader').style.display = 'flex'; // overlay loading screen
-            // const params = {
-            //     param1: p1,
-            //     param2: p2
-            // };
+            
 
             // Call the Flask API with parameters
             fetch('/fetchUserHistoryDetails', {

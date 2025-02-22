@@ -46,9 +46,14 @@
                     <h1 class="display-1 text-red mb-md-4">"Give the gift of life—it costs nothing but means everything."
                     </h1>
                     <div class="pt-2">
-                        <a  onclick="showModal()" class="btn btn-light rounded-pill py-md-3 px-md-5 mx-2"  id="loginModal">Donate Now</a>
-                        <a onclick="openHome('Contact');" class="btn btn-outline-light rounded-pill py-md-3 px-md-5 mx-2">Contact Us</a>
-                    </div>
+                        
+                        {% if session.get('logged_in') == True %}
+                        <a href="{{url_for('History')}}" class="btn btn-light rounded-pill py-md-3 px-md-5 mx-2">history</a>
+                        <a href="{{url_for('Contact')}}" class="btn btn-outline-light rounded-pill py-md-3 px-md-5 mx-2">Contact Us</a>
+                        {% else %}
+                        <a href="{{url_for('Loginpage')}}" class="btn btn-light rounded-pill py-md-3 px-md-5 mx-2">History</a>
+                        <a href="{{url_for('Contact')}}" class="btn btn-outline-light rounded-pill py-md-3 px-md-5 mx-2">Contact Us</a>
+                        {% endif %}</div>
                 </div>
             </div>
         </div>

@@ -37,8 +37,6 @@ def match(targetBloodGroup,targetCity):
    
 
     target_blood_group = targetBloodGroup
-
-    print(f"Received targetBloodGroup: {targetBloodGroup}")
      # Ensure the targetBloodGroup is valid
     if targetBloodGroup is None:
         raise ValueError("Blood group cannot be None.")
@@ -77,7 +75,7 @@ def match(targetBloodGroup,targetCity):
     y_pred = svm_model.predict(X_test)
 
     # Evaluate the model
-    print("Accuracy:", accuracy_score(y_test, y_pred))
+    #print("Accuracy:", accuracy_score(y_test, y_pred))
 
     # Filter for a specific blood group (e.g., 'O+')
    
@@ -88,8 +86,5 @@ def match(targetBloodGroup,targetCity):
     full_predictions = svm_model.predict(X_full_transformed)
     filtered_data = df[full_predictions == target_label]
 
-    # Output filtered data
-    #print(f"Filtered data for blood group {target_blood_group}:")
-    #print(filtered_data)
 
     return filtered_data

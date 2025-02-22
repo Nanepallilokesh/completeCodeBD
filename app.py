@@ -70,6 +70,17 @@ def HospitalSeeker():
 @app.route('/Coins')
 def Coins():
     return render_template("coins.html")
+
+@app.route('/DonorId')
+def DonorId():
+    login_user_name = session['logged_user_name']
+    query = "SELECT id FROM registered_users WHERE userName=%s"
+    cursor.execute(query, [login_user_name])
+    result = cursor.fetchone()
+    if result:
+        return render_template("donorId.html", donor_id=result[0])  # Pass donor_id to template
+    else:
+        return "Please re-login"  # More descriptive message
     
 @app.route('/History')
 def History():
@@ -80,70 +91,7 @@ def donarList():
     return render_template("history.html")
 
 
-# @app.route('/updateDonarPoints', methods=['POST'])
-# def updateDonarPoints():
-    # print("1")
-    # userName = request.json.get('userName')
-    # bloodGroup = request.json.get('bloodGroup')
-    # city = request.json.get('city')
-    # email = request.json.get('email')
-    # print("2")
 
-    # if not userName or not bloodGroup or not city or not email:
-    #     return jsonify({"message": "All fields are required."}), 400
-
-    # try:
-    #     cursor.execute("SELECT coin FROM coins WHERE userName = %s",[userName]) 
-    #     result_coins = cursor.fetchone()
-    #     print("Result:", result_coins)
-
-    #     # Handle None case
-    #     coins = 0
-    #     if result_coins:
-    #         coins = int(result_coins[0]) if isinstance(result_coins[0], (int, float)) else int(result_coins[0].decode())
-
-    #     print("coins is:", coins)
-
-    #     # Fetch user ID
-    #     cursor.execute("SELECT id FROM registered_users WHERE email = %s", [email])
-    #     result_userId = cursor.fetchone()
-
-    #     if not result_userId:
-    #         return jsonify({"message": "No matching user found."}), 404
-
-    #     userId = int(result_userId[0])
-    #     new_points = coins + 100  # Add 100 to the existing coins
-
-    #     # Insert donor history
-    #     cursor.execute("""
-    #     INSERT INTO donarsHistory (userId, userName, bloodGroup, city, email, date)
-    #     VALUES (%s, %s, %s, %s, %s, %s)
-    #     """, (userId, userName, bloodGroup, city, email, date.today()))
-
-    #     # Update or insert user coins
-    #     if coins == 0:
-    #         cursor.execute("""
-    #         INSERT INTO usercoins (userId, userName, bloodGroup, city, email, coins)
-    #         VALUES (%s, %s, %s, %s, %s, %s)
-    #         """, (userId, userName, bloodGroup, city, email, new_points))
-    #     else:
-    #         cursor.execute("UPDATE usercoins SET coins = %s WHERE userId = %s", (new_points, userId))
-
-    #     con.commit()
-
-    #     return jsonify({
-    #         "message": f"Redeem points updated for user '{userName}'.",
-    #         "userName": userName,
-    #         "newPoints": new_points
-    #     }), 200
-
-    # except mysql.connector.Error as e:
-    #     print(f"MySQL Error: {e}")
-    #     return jsonify({"message": "Failed to update records in fetch_coins", "error": str(e)}), 500
-
-    # except Exception as e:
-    #     print(f"Unexpected error: {e}")
-    #     return jsonify({"message": "An unexpected error occurred", "error": str(e)}), 500
 
 
 @app.route('/Login', methods=['GET','POST'])
@@ -158,6 +106,7 @@ def Login():
             user=cursor.fetchone()
             if user:
                 session['logged_in'] = True
+                
                 return render_template('/hospital/index.html')
             else:
                 return render_template('/userLogin/login.html',error="failed")
@@ -167,6 +116,7 @@ def Login():
             user=cursor.fetchone()
             if user:
                 session['logged_in'] = True
+                session['logged_user_name']=username
                 return render_template("index.html")
             else:
                 error = "Invalid username or password for donar login"
@@ -188,10 +138,9 @@ def Register():
         else:
             try:
                 session['logged_in'] = True
-                print(session['logged_in'])
                 cursor.execute("""Insert into registered_users(username,email,phone_number,city,blood_group,password) values(%s,%s,%s,%s,%s,%s)""",(username,email,phone_number,city,blood_group,password))
                 con.commit()
-                return render_template('index.html')
+                return render_template("/userLogin/login.html")
             except mysql.connector.Error as err:
                 return f"Error: {err}",500
             
@@ -229,12 +178,11 @@ def Donar():
     seekername = request.json.get('seekername')
     tempBloodGroup = request.json.get('bloodgroup')
 
-    print(f"Received blood group: {tempBloodGroup}")
 
     city = request.json.get('city')
 
     result=match(tempBloodGroup,city)
-    print(f"result-->",result)
+
     username=[i for i in result['username']]
     bloodgroup=[i for i in result['blood_group']]
     city=[i for i in result['city']]
@@ -384,7 +332,6 @@ def update_request_record():
         seeker_name = request.json.get('seekerName')
         uname = request.json.get('uname')
         bloodGroup = request.json.get('bloodGroup')
-        print('Blood Group:',bloodGroup)
         city = request.json.get('city')
         email = request.json.get('email')
         # Validate input
@@ -409,7 +356,6 @@ def update_request_record():
             """
             cursor.execute(query, [uname])
             result=cursor.fetchone()
-            print("result::",result)
         except Exception as e:
             print(f"Unexpected error-3(2): {e}")
             return jsonify({"message": "An unexpected error occurred", "error": str(e)}), 500
@@ -418,7 +364,6 @@ def update_request_record():
         result_userId = cursor.fetchone()
         userId=result_userId[0]
         if int(result==None):
-            print("in new ")
             cursor.execute("""
            INSERT INTO coins (userId, userName, bloodGroup, city, email, coin)
            VALUES (%s, %s, %s, %s, %s, %s)
@@ -465,20 +410,17 @@ def fetch_Coins():
         userId = request.json.get('userId')
         userName = request.json.get('userName')
 
-        print('userId:',userId)
-        print('userName:',userName)
-
         # Validate input
         if not userName or not userId :
             return jsonify({"message": "All fields (userName, userId) are required."}), 400
 
         
         # Query to fetch redeem points for the given userName
-        query_points = "SELECT coins FROM userCoins WHERE userName = %s and userId = %s"
+        query_points = "SELECT coin FROM coins WHERE userName = %s and userId = %s"
         cursor.execute(query_points, [userName,userId])
         result_points = cursor.fetchone()
 
-        print("result:",result_points)
+
         if result_points:
             return jsonify({
                 "message": f"Redeem points updated for user '{userName}'.",
@@ -503,8 +445,7 @@ def fetch_User_History():
         userName = request.json.get('userName')
 
         # Use dictionary cursor to get results as dictionaries
-        print('userId:',userId)
-        print('userName:',userName)
+
 
         cursor1 = con.cursor(dictionary=True)
 
@@ -519,8 +460,7 @@ def fetch_User_History():
         # Fetch all records
         result = cursor1.fetchall()
 
-        print("result:")
-        print(result)
+
     
 
         # Extract data into separate lists
@@ -569,46 +509,56 @@ def recommend_food():
         plan = request.form.get('diet_plan', '')
         if plan == 'no':
             return render_template('home.html')
-
+        userName=request.form.get('donor_name')
+        userId=request.form.get('donor_id')
+        query='''
+        select userName,userId from donarshistory where userName=%s and userId=%s
+        '''
+        cursor.execute(query,[userName,userId])
+        result=cursor.fetchall()
+        if result:
         # Get input data from the form
-        age = int(request.form.get('age', 0))  # Default age to 0 if missing
-        gender = request.form.get('gender', 'male')  # Default gender if not provided
-        gender_encoded = encoders['gender'].transform([gender])[0]
+            age = int(request.form.get('age', 25))  # Default age to 0 if missing
+            gender = request.form.get('gender', 'male')  # Default gender if not provided
+            gender_encoded = encoders['gender'].transform([gender])[0]
 
-        # Handle preferences
-        preferences = request.form.get('preferences', 'veg')  # Default to 'veg' if not provided
-        preferences_encoded = encoders['preferences'].transform([preferences])[0]
+            # Handle preferences
+            preferences = request.form.get('preferences', 'veg')  # Default to 'veg' if not provided
+            preferences_encoded = encoders['preferences'].transform([preferences])[0]
 
-        # Handle side effects and health conditions
-        side_effects = request.form.get('side_effects', 'None')  # Default to 'None' if not provided
-        if side_effects == '':
-            side_effects = 'None'  # Treat empty string as 'None'
-        side_effects_encoded = 0  # Default encoded value for 'None'
-        if side_effects != 'None':
-            side_effects_encoded = encoders['side_effects'].transform([side_effects])[0]
+            # Handle side effects and health conditions
+            side_effects = request.form.get('side_effects', 'None')  # Default to 'None' if not provided
+            if side_effects == '':
+                side_effects = 'None'  # Treat empty string as 'None'
+            side_effects_encoded = 0  # Default encoded value for 'None'
+            if side_effects != 'None':
+                side_effects_encoded = encoders['side_effects'].transform([side_effects])[0]
 
-        health_conditions = request.form.get('health_conditions', 'None')  # Default to 'None' if not provided
-        if health_conditions == '':
-            health_conditions = 'None'  # Treat empty string as 'None'
-        health_conditions_encoded = 0  # Default encoded value for 'None'
-        if health_conditions != 'None':
-            health_conditions_encoded = encoders['health_conditions'].transform([health_conditions])[0]
+            health_conditions = request.form.get('health_conditions', 'None')  # Default to 'None' if not provided
+            if health_conditions == '':
+                health_conditions = 'None'  # Treat empty string as 'None'
+            health_conditions_encoded = 0  # Default encoded value for 'None'
+            if health_conditions != 'None':
+                health_conditions_encoded = encoders['health_conditions'].transform([health_conditions])[0]
 
-        # Ensure the input array always has 5 features
-        input_features = np.array([[age, gender_encoded, preferences_encoded, side_effects_encoded, health_conditions_encoded]])
+            # Ensure the input array always has 5 features
+            input_features = np.array([[age, gender_encoded, preferences_encoded, side_effects_encoded, health_conditions_encoded]])
 
-        # Get the model's probability scores for all classes (meals)
-        probabilities = model.predict_proba(input_features)[0]
+            # Get the model's probability scores for all classes (meals)
+            probabilities = model.predict_proba(input_features)[0]
 
-        # Find the top 3 meals based on probabilities
-        top_indices = np.argsort(probabilities)[-3:][::-1]  # Indices of top 3 meals
-        top_meals = [encoders['meal'].inverse_transform([idx])[0] for idx in top_indices]
+            # Find the top 3 meals based on probabilities
+            top_indices = np.argsort(probabilities)[-3:][::-1]  # Indices of top 3 meals
+            top_meals = [encoders['meal'].inverse_transform([idx])[0] for idx in top_indices]
 
-        # Render results in the HTML template
-        return render_template('dietResults.html', meals=top_meals)
+            # Render results in the HTML template
+            return render_template('dietResults.html', meals=top_meals)
+        else:
+            return 'Kindly please do donation for diet suggestion..'
+        
 
     except Exception as e:
-        return jsonify({'error': str(e)})
+        return jsonify({'error-': str(e)})
 
 
        
